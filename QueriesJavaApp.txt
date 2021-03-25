@@ -1,0 +1,27 @@
+SELECT * FROM PATRON
+
+SELECT Person.Name, Selected.Count 
+FROM Person, Employee, Patron, (SELECT Person.PersonID, COUNT(*) as Count
+FROM Loanable, Person
+WHERE Loanable.PersonID = Person.PersonID
+GROUP BY Person.PersonID) as Selected 
+WHERE Person.PersonID = Employee.PersonID AND Employee.PersonID = Patron.PersonID and Selected.PersonID = Person.PersonID
+ORDER BY Selected.Count DESC;
+
+SELECT Name
+FROM
+(SELECT Person.Name, COUNT(*) AS NumMovies 
+FROM Person, Actor, Loanable, Movie, MovieActor
+WHERE Person.PersonID = Actor.PersonID AND Movie.ID = Loanable.ID AND MovieActor.ActorID = Actor.PersonID AND MovieActor.MovieID = Movie.ID AND Loanable.PersonID IS NOT NULL 
+GROUP BY Person.Name 
+ORDER BY NumMovies DESC
+LIMIT 1) AS TopMovieCount;
+
+SELECT Name 
+FROM
+(SELECT Person.Name, COUNT(*) AS NumMovies 
+FROM Person, Actor, Loanable, Movie, MovieActor
+WHERE Person.PersonID = Actor.PersonID AND Movie.ID = Loanable.ID AND MovieActor.ActorID = Actor.PersonID AND MovieActor.MovieID = Movie.ID AND Loanable.PersonID IS NOT NULL 
+GROUP BY Person.Name
+ORDER BY NumMovies DESC
+LIMIT 1) AS TopMovieCount;
